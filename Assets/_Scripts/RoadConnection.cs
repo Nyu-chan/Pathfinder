@@ -1,11 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class RoadConnection : object
+﻿public class RoadConnection
 {
-
     public RoadNode NodeA;
     public RoadNode NodeB;
-
-
 }
