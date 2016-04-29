@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
+using System;
 
 public class Rasterizer : MonoBehaviour
 {
@@ -15,6 +17,17 @@ public class Rasterizer : MonoBehaviour
     private void Update()
     {
 
+        if (Input.GetMouseButtonUp(0))
+        {
+            int gridCoordX = -1;
+            int gridCoordY = -1;
+            if (GetGridCoordFromScreenCoord(Input.mousePosition.x, Input.mousePosition.y, out gridCoordX, out gridCoordY))
+            {
+                Debug.Log(gridCoordX.ToString() + " " + gridCoordY.ToString());
+                Grid[gridCoordX, gridCoordY].GetComponent<TileInfo>().SwitchColor();
+            }
+        }
+
     }
 
     private void PopulateGrid()
@@ -29,5 +42,27 @@ public class Rasterizer : MonoBehaviour
                 Grid[i, j] = newTile;
             }
         }
+    }
+
+    private bool GetGridCoordFromScreenCoord(float x, float y, out int gridCoordX, out int gridCoordY)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(new Vector2(x, y));
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            gridCoordX = (int)Math.Round(hit.point.x * -1, 0);
+            gridCoordY = (int)Math.Round(hit.point.z * -1, 0);
+
+            if (0 <= gridCoordX && gridCoordX <= 9 && 0 <= gridCoordY && gridCoordY <= 9)
+            {
+                return true;
+            }
+
+        }
+
+
+        gridCoordX = -1;
+        gridCoordY = -1;
+        return false;
     }
 }
